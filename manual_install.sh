@@ -176,7 +176,10 @@ echo "Building mongo-hadoop..."
 cd mongo-hadoop
 ./gradlew jar
 cd ..
-cp mongo-hadoop/spark/build/libs/mongo-hadoop-spark-*.jar lib/
+
+wget -O $PROJECT_HOME/lib/mongo-hadoop-spark-2.0.2.jar http://repo1.maven.org/maven2/org/mongodb/mongo-hadoop/mongo-hadoop-spark/2.0.2/mongo-hadoop-spark-2.0.2.jar
+
+
 cp mongo-hadoop/build/libs/mongo-hadoop-*.jar lib/
 
 # Now build the pymongo_spark package
@@ -223,8 +226,8 @@ curl -Lko lib/lzo-hadoop-1.0.5.jar http://central.maven.org/maven2/org/anarres/l
 # Setup mongo and elasticsearch jars for Spark
 echo "spark.jars $PROJECT_HOME/lib/mongo-hadoop-spark-2.0.0-rc0.jar,\
 $PROJECT_HOME/lib/mongo-java-driver-3.2.2.jar,\
-$PROJECT_HOME/lib/mongo-hadoop-2.0.0-rc0.jar,\
-$PROJECT_HOME/lib/elasticsearch-spark-20_2.10-5.0.0-alpha5.jar,\
+$PROJECT_HOME/lib/mongo-hadoop-2.0.2.jar,\
+$PROJECT_HOME/lib/elasticsearch-spark-20_2.11-6.5.1.jar,\
 $PROJECT_HOME/lib/snappy-java-1.1.2.6.jar,\
 $PROJECT_HOME/lib/lzo-hadoop-1.0.0.jar" \
   >> spark/conf/spark-defaults.conf
