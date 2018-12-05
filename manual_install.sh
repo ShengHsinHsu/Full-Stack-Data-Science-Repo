@@ -163,7 +163,7 @@ fi
 
 # Get the MongoDB Java Driver
 echo "Fetching the MongoDB Java Driver to $PROJECT_HOME/lib/ ..."
-curl -Lko lib/mongo-java-driver-3.4.0.jar http://central.maven.org/maven2/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar
+wget -O lib/mongo-java-driver-3.4.0.jar http://central.maven.org/maven2/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar
 
 # Install the mongo-hadoop project in the mongo-hadoop directory in the root of our project.
 echo "Installing the mongo-hadoop project in $PROJECT_HOME/mongo-hadoop ..."
@@ -221,7 +221,7 @@ echo "spark.speculation false" >> $PROJECT_HOME/spark/conf/spark-defaults.conf
 # Install and add snappy-java and lzo-java to our classpath below via spark.jars
 echo "Installing snappy-java and lzo-hadoop to $PROJECT_HOME/lib ..."
 curl -Lko lib/snappy-java-1.1.2.6.jar http://central.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.2.6/snappy-java-1.1.2.6.jar
-curl -Lko lib/lzo-hadoop-1.0.5.jar http://central.maven.org/maven2/org/anarres/lzo/lzo-hadoop/1.0.0/lzo-hadoop-1.0.0.jar
+curl -Lko lib/lzo-hadoop-1.0.5.jar http://central.maven.org/maven2/org/anarres/lzo/lzo-hadoop/1.0.0/lzo-hadoop-1.0.5.jar
 
 # Setup mongo and elasticsearch jars for Spark
 echo "spark.jars $PROJECT_HOME/lib/mongo-hadoop-spark-2.0.0-rc0.jar,\
@@ -229,7 +229,7 @@ $PROJECT_HOME/lib/mongo-java-driver-3.2.2.jar,\
 $PROJECT_HOME/lib/mongo-hadoop-2.0.2.jar,\
 $PROJECT_HOME/lib/elasticsearch-spark-20_2.11-6.5.1.jar,\
 $PROJECT_HOME/lib/snappy-java-1.1.2.6.jar,\
-$PROJECT_HOME/lib/lzo-hadoop-1.0.0.jar" \
+$PROJECT_HOME/lib/lzo-hadoop-1.0.5.jar" \
   >> spark/conf/spark-defaults.conf
 
 # Setup spark classpath for snappy for parquet... required for OS X 10.11, others can skip
