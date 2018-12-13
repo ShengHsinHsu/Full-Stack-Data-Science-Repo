@@ -261,3 +261,4 @@ if [ -z `which airflow` ]; then
   airflow initdb
   airflow webserver -D
 fi
+
