@@ -1,0 +1,11 @@
+#
+#
+#  GPU: NVIDIA Corporation GK104 [GeForce GTX 660 OEM] (rev a1) and Intel Integrated Graphic Card 
+#
+#  
+
+************************ IMPORTANT ************************
+
+Set the primary Graphic Card to be NVIDIA (discrete graphic card/ stand-alone graphic card) (BIOS Setting)
+
+***********************************************************
