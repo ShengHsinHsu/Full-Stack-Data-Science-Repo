@@ -1,0 +1,143 @@
+  export PATH="$HOME/anaconda/bin:$PATH"
+  echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' >> ~/.bash_profile
+
+:compileJava UP-TO-DATE
+:processResources UP-TO-DATE
+:classes UP-TO-DATE
+:jar
+:core:compileJava FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':core:compileJava'.
+> Cannot find System Java Compiler. Ensure that you have installed a JDK (not just a JRE) and configured your JAVA_HOME system variable to point to the according directory.
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+
+BUILD FAILED
+
+################################# Solve Agile EC2 instance failing ###############
+
+conda install tornado==4.5.3
+** Also need to check with the python version and modifythe ./manual install shell
+
+217    export PATH="$HOME/anaconda/bin:$PATH"
+218    echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' >> ~/.bash_profile
+219  sudo echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' >> ~/.bash_profile
+220  sudo -r echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' >> ~/.bash_profile
+221  echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' >> ~/.bash_profile
+222    export PATH="$HOME/anaconda/bin:$PATH"
+
+################################################################################################################
+================================================================================================================
+################################################################################################################
+Everytime start the doing project to following thing:
+
+cd /Users/Peter/Desktop/Data Science Full Stack/Agile_Data_Code_2
+
+(ssh connect to EC2)
+
+ssh -N -i "agile_data_science.pem" -o StrictHostKeyChecking=no -L 8888:localhost:8888 (hostname) &
+ssh -N -i "agile_data_science.pem" -o StrictHostKeyChecking=no -L 8080:localhost:8080 (hostname) &
+
+screen
+
+jupyter notebook &
+airflow webserver -p 8080 &
+
+clt + A and clt + D (detach the screen)
+
+################################################################################################################
+================================================================================================================
+################################################################################################################
+
+
+################################################################################################################
+
+================ Tunnel to Ec2 ================================
+
+ssh -N -i "agile_data_science.pem" -o StrictHostKeyChecking=no -L 8888:localhost:8888 ubuntu@ec2-18-232-159-64.compute-1.amazonaws.com
+ssh -N -i "agile_data_science.pem" -o StrictHostKeyChecking=no -L 8080:localhost:8080 ubuntu@ec2-18-232-159-64.compute-1.amazonaws.com
+
+
+================ Mongo: Run pyspark with Jar ================================
+
+PYSPARK_DRIVER_PYTHON=ipython pyspark --jars /home/ubuntu/Agile_Data_Code_2/lib/mongo-hadoop-spark-2.0.2.jar,/home/ubuntu/Agile_Data_Code_2/lib/mongo-java-driver-3.4.0.jar,/home/ubuntu/Agile_Data_Code_2/lib/mongo-hadoop-2.0.2.jar \
+--driver-class-path /home/ubuntu/Agile_Data_Code_2/lib/mongo-hadoop-spark-2.0.2.jar:/home/ubuntu/Agile_Data_Code_2/lib/mongo-java-driver-3.4.0.jar:/home/ubuntu/Agile_Data_Code_2/lib/mongo-hadoop-2.0.2.jar
+
+import pymongo
+import pymongo_spark
+# Important: activate pymongo_spark.
+pymongo_spark.activate()
+
+csv_lines = sc.textFile("data/example.csv")
+data = csv_lines.map(lambda line: line.split(","))
+schema_data = data.map(lambda x: {'name': x[0], 'company': x[1], 'title': x[2]})
+schema_data.saveToMongoDB('mongodb://localhost:27017/agile_data_science.executives')
+
+
+
+================ Elastic Search Pyspark jar ==========================
+the elastic version is 5.3.3 but ES-spark version is 6.1.3
+*Download ES-spark 5.3.3
+wget http://download.elastic.co/hadoop/elasticsearch-hadoop-5.3.3.zip
+
+echo $HADOOP_CLASSPATH | grep "elasticsearch-hadoop-"
+
+pyspark --jars /home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-hadoop-5.3.3.jar
+
+/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-hadoop-6.1.3.jar
+,/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-hadoop-cascading-6.1.3.jar
+,/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-hadoop-hive-6.1.3.jar
+,/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-hadoop-mr-6.1.3.jar
+,/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-hadoop-pig-6.1.3.jar
+,/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-spark-20_2.10-6.1.3.jar
+,/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-spark-20_2.11-6.1.3.jar
+,/home/ubuntu/elasticsearch-hadoop/dist/elasticsearch-storm-6.1.3.jar
+
+================ Zookeeper for Kafka ================================
+Run Zookeeper for Kafka -> orchestrate for Kafka
+kafka/bin/zookeeper-server-start.sh kafka/config/zookeeper.properties
+
+Run Kafka server
+kafka/bin/kafka-server-start.sh kafka/config/server.properties
+
+Create topic
+kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+
+See Topic
+kafka/bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+Console Producer
+kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+-> You can enter the json message to kafka
+
+See Message 
+kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+
+Pyspark-streaming with Kafka
+pyspark --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.0
+
+
+================ Airflow ================================ 
+
+export AIRFLOW_HOME=~/airflow
+
+# install from pypi using pip
+pip install apache-airflow
+
+# initialize the database
+airflow initdb
+
+# start the web server, default port is 8080
+airflow webserver -p 8080
+
+# start the scheduler
+airflow scheduler
+
+# visit localhost:8080 in the browser and enable the example dag in the home page
+
+
+

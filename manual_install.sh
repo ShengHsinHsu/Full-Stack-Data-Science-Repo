@@ -8,7 +8,8 @@
 #
 # Lots of stuff depends on $PROJECT_HOME being set
 #
-export PROJECT_HOME=`pwd`
+export PROJECT_HOME=$HOME
+
 echo "export PROJECT_HOME=$PROJECT_HOME" >> ~/.bash_profile
 
 #
@@ -56,6 +57,8 @@ if [ ! -d $HOME/anaconda ]; then
   bash "/tmp/Anaconda3-4.2.0-${ANADONCA_OS_NAME}-x86_64.sh" -b -p $HOME/anaconda
   export PATH="$HOME/anaconda/bin:$PATH"
   echo 'export PATH="$HOME/anaconda/bin:$PATH"' >> ~/.bash_profile
+  conda create -n python2 python=2.7 anaconda
+  source activate python2
 else
   echo "Skipping Anaconda, already installed..."
 fi
@@ -107,10 +110,10 @@ if [ ! -d spark ]; then
   echo "Installing Spark 2.1.0 into $PROJECT_HOME/spark ..."
 
   # May need to update this link... see http://spark.apache.org/downloads.html
-  curl -Lko /tmp/spark-2.1.0-bin-without-hadoop.tgz http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-without-hadoop.tgz
+  curl -Lko /tmp/spark-2.4.0-bin-without-hadoop.tgz https://archive.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-without-hadoop.tgz
 
   mkdir spark
-  tar -xvf /tmp/spark-2.1.0-bin-without-hadoop.tgz -C spark --strip-components=1
+  tar -xvf /tmp/spark-2.4.0-bin-without-hadoop.tgz -C spark --strip-components=1
   echo "" >> ~/.bash_profile
   echo "# Spark environment setup" >> ~/.bash_profile
   export SPARK_HOME=$PROJECT_HOME/spark
