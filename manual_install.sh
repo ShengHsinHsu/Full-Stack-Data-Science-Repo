@@ -8,8 +8,14 @@
 #
 # Lots of stuff depends on $PROJECT_HOME being set
 #
-export PROJECT_HOME=$HOME
+#export PROJECT_HOME=`pwd`
 
+export PROJECT_HOME=/bigdata/env
+export HOME=`pwd`
+cd $PROJECT_HOME
+export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-1.el7_6.x86_64/jre"
+# Find the JDK bin file might need to change
+echo 'export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-1.el7_6.x86_64/jre/bin' >> ~/.bash_profile
 echo "export PROJECT_HOME=$PROJECT_HOME" >> ~/.bash_profile
 
 #
@@ -75,7 +81,6 @@ echo "Installing Python libraries..."
 # Install as many requirements as we can with conda
 conda install iso8601 numpy scipy scikit-learn matplotlib ipython jupyter
 # Setup remaining Python package requirements
-pip install -r requirements.txt
 
 #
 # Install Hadoop in the hadoop directory in the root of our project. Also, setup
@@ -205,7 +210,7 @@ if [ -z `which elasticsearch` ] && [ ! -d elasticsearch ]; then
   curl -Lko /tmp/elasticsearch-6.5.1.tar.gz https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.1.tar.gz
   mkdir elasticsearch
   tar -xvzf /tmp/elasticsearch-6.5.1.tar.gz -C elasticsearch --strip-components=1
-
+  echo 'export PATH=$PATH:$PROJECT_HOME/elasticsearch/bin' >> ~/.bash_profile
   # Run elasticsearch
   elasticsearch/bin/elasticsearch -d # re-run if you shutdown your computer
 else
@@ -248,6 +253,7 @@ if [ -z `which kafka-server-start.sh` ] && [ ! -d kafka ]; then
   wget -O /tmp/kafka_2.11-0.10.1.1.tgz http://www.apache.org/dist/kafka/0.10.2.2/kafka_2.11-0.10.2.2.tgz
   mkdir kafka
   tar -xvzf /tmp/kafka_2.11-0.10.1.1.tgz -C kafka --strip-components=1
+  echo 'export PATH=$PATH:$PROJECT_HOME/kafka/bin' >> ~/.bash_profile
 else
   echo "Skipping kafka, already installed..."
 fi
@@ -256,12 +262,18 @@ fi
 
 # Install Apache Incubating Airflow
 if [ -z `which airflow` ]; then
-  pip install airflow
-  mkdir ~/airflow
-  mkdir ~/airflow/dags
-  mkdir ~/airflow/logs
-  mkdir ~/airflow/plugins
+  # pip install airflow
+  export AIRFLOW_GPL_UNIDECODE=yes
+  pip install apache-airflow
+  mkdir $PROJECT_HOME/airflow
+  mkdir $PROJECT_HOME/airflow/dags
+  mkdir $PROJECT_HOME/airflow/logs
+  mkdir $PROJECT_HOME/airflow/plugins
   airflow initdb
   airflow webserver -D
 fi
 
+
+source $HOME/.bash_profile
+
+wget -O /tmp/Anaconda3-4.3.0-Linux-x86_64.sh https://repo.continuum.io/archive/Anaconda3-4.3.0-Linux-x86_64.sh

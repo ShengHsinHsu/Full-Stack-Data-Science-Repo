@@ -1,5 +1,6 @@
-  export PATH="$HOME/anaconda/bin:$PATH"
-  echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' >> ~/.bash_profile
+ export PATH=":$HOME/anaconda/bin:$PATH"
+ 
+ echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' >> ~/.bash_profile
 
 :compileJava UP-TO-DATE
 :processResources UP-TO-DATE
@@ -122,7 +123,7 @@ pyspark --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.0
 
 
 ================ Airflow ================================ 
-
+export AIRFLOW_GPL_UNIDECODE=yes
 export AIRFLOW_HOME=~/airflow
 
 # install from pypi using pip
