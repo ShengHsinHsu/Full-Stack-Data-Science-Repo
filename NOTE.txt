@@ -146,3 +146,9 @@ airflow scheduler
 
 
 
+## Convert field from string to int in mongodb
+
+db.collectionName.find().forEach( function (x) {
+x.FieldName = parseInt(x.FieldName);
+db.collectionName.save(x);
+});
